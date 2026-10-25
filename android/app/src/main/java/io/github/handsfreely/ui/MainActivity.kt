@@ -5,7 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
+import android.os.Process
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -119,6 +122,7 @@ class MainActivity : AppCompatActivity() {
                 revokeSelfPermissionsOnKill(permissionsOf(item))
                 LinkService.stop(this)
                 finishAndRemoveTask()
+                Handler(Looper.getMainLooper()).postDelayed({ Process.killProcess(Process.myPid()) }, 500)
             }
             else -> {
                 Toast.makeText(this, R.string.revoke_settings_hint, Toast.LENGTH_LONG).show()
