@@ -19,7 +19,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <SatelliteResourceLanguages>en;ru</SatelliteResourceLanguages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -28,6 +28,14 @@
     <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
     <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
   </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <TrimmerRootAssembly Include="WinRT.Runtime" />
+    <TrimmerRootAssembly Include="Microsoft.WinUI" />
+    <TrimmerRootAssembly Include="Microsoft.Windows.SDK.NET" />
+    <TrimmerRootAssembly Include="Microsoft.InteractiveExperiences.Projection" />
+    <TrimmerRootAssembly Include="Microsoft.Windows.AppLifecycle.Projection" />
+    <TrimmerRootAssembly Include="Microsoft.Windows.AppNotifications.Projection" />
+    <TrimmerRootAssembly Include="Microsoft.Windows.AppNotifications.Builder.Projection" />  </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
     <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />

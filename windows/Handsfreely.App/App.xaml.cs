@@ -28,7 +28,7 @@ public partial class App : Application
         InitializeComponent();
         UnhandledException += (_, e) =>
         {
-            Log.Error("unhandled", e.Exception);
+            Log.Error($"unhandled: {e.Message}\n{e.Exception}");
             e.Handled = true;
         };
     }
