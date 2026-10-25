@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Handsfreely</string>
+    <string name="channel_link">Connection to the PC</string>
+    <string name="notif_no_pcs">No computers yet. Open the app to connect one.</string>
+    <string name="notif_waiting">Waiting for the computer</string>
+    <string name="notif_connected">Connected: %1$s</string>
+
+    <string name="language">Language</string>
+    <string name="language_system">System default</string>
+    <string name="language_ru" translatable="false">Русский</string>
+    <string name="language_en" translatable="false">English</string>
+
+    <string name="section_pcs">Computers</string>
+    <string name="no_pcs_hint">On the computer, open Handsfreely, go to Phones and click \"Add a phone\". Then scan the QR code here.</string>
+    <string name="connect_pc">Connect a PC</string>
+    <string name="scan_prompt">Point the camera at the QR code in Handsfreely on the computer</string>
+    <string name="pc_connected">Connected</string>
+    <string name="pc_connecting">Connecting…</string>
+    <string name="pc_offline">Not in range or the program is closed</string>
+    <string name="pc_forgotten">The computer removed this phone. Remove it here and scan a new QR code.</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove_confirm">Remove the computer \"%1$s\"? Connecting again will need a new QR code.</string>
+
+    <string name="pairing_working">Connecting to \"%1$s\"… If Android asks to pair with the computer, confirm it.</string>
+    <string name="pairing_done">The computer \"%1$s\" is connected.</string>
+    <string name="pairing_bad_code">This is not a Handsfreely QR code.</string>
+    <string name="pairing_bt_off">Bluetooth is off. Turn it on and try again.</string>
+    <string name="pairing_no_permission">The app has no access to Bluetooth or the camera.</string>
+    <string name="pairing_window_closed">The QR code on the computer has expired or was closed. Show it again.</string>
+    <string name="pairing_rejected">The computer rejected the connection. Show a new QR code and try again.</string>
+    <string name="pairing_connect_failed">Could not reach the computer. Check that Handsfreely is running on it and Bluetooth is on.</string>
+
+    <string name="section_permissions">Access</string>
+    <string name="allow">Allow</string>
+    <string name="granted">Allowed</string>
+    <string name="perm_bluetooth">Bluetooth</string>
+    <string name="perm_bluetooth_hint">Connection to the computer</string>
+    <string name="perm_phone">Calls</string>
+    <string name="perm_phone_hint">Dial, answer and end calls from the computer</string>
+    <string name="perm_contacts">Contacts</string>
+    <string name="perm_contacts_hint">Your contacts on the computer</string>
+    <string name="perm_calllog">Call log</string>
+    <string name="perm_calllog_hint">Recent calls and the caller\'s number</string>
+    <string name="perm_post">Notifications</string>
+    <string name="perm_post_hint">Shows the connection status</string>
+    <string name="sms_hint">SMS on the computer work over Bluetooth without extra access here: when the phone asks whether the computer may access messages, allow it.</string>
+    <string name="perm_battery">No battery restrictions</string>
+    <string name="perm_battery_hint">Keeps the connection while the screen is off</string>
+
+    <string name="section_call_control">Call control</string>
+    <string name="call_control_full">Full: answer, hold, mute, keypad tones and moving audio work from the computer.</string>
+    <string name="call_control_basic">Basic: dialing, answering, declining and hanging up work from the computer. On Windows 11 the computer also handles hold, mute and keypad tones itself.</string>
+
+    <string name="footer">Handsfreely %1$s · open source · github.com/0fells/Handsfreely</string>
+</resources>

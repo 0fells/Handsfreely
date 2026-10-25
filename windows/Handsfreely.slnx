@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Handsfreely.App/Handsfreely.App.csproj">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="Handsfreely.Core.Tests/Handsfreely.Core.Tests.csproj" />
+  <Project Path="Handsfreely.Core/Handsfreely.Core.csproj" />
+</Solution>

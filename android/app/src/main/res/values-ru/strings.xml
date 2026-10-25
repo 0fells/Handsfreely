@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_link">Связь с ПК</string>
+    <string name="notif_no_pcs">Компьютеров пока нет. Откройте приложение, чтобы подключить.</string>
+    <string name="notif_waiting">Ждём компьютер</string>
+    <string name="notif_connected">Подключено: %1$s</string>
+
+    <string name="language">Язык</string>
+    <string name="language_system">Как в системе</string>
+
+    <string name="section_pcs">Компьютеры</string>
+    <string name="no_pcs_hint">На компьютере откройте Handsfreely, перейдите в \"Телефоны\" и нажмите \"Добавить телефон\". Затем отсканируйте QR-код здесь.</string>
+    <string name="connect_pc">Подключить ПК</string>
+    <string name="scan_prompt">Наведите камеру на QR-код в Handsfreely на компьютере</string>
+    <string name="pc_connected">Подключён</string>
+    <string name="pc_connecting">Подключаемся…</string>
+    <string name="pc_offline">Вне зоны или программа закрыта</string>
+    <string name="pc_forgotten">Компьютер удалил этот телефон. Удалите его здесь и отсканируйте новый QR-код.</string>
+    <string name="remove">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="remove_confirm">Удалить компьютер \"%1$s\"? Чтобы подключить его снова, понадобится новый QR-код.</string>
+
+    <string name="pairing_working">Подключаемся к \"%1$s\"… Если Android попросит сопряжение с компьютером, подтвердите.</string>
+    <string name="pairing_done">Компьютер \"%1$s\" подключён.</string>
+    <string name="pairing_bad_code">Это не QR-код Handsfreely.</string>
+    <string name="pairing_bt_off">Bluetooth выключен. Включите его и повторите.</string>
+    <string name="pairing_no_permission">У приложения нет доступа к Bluetooth или камере.</string>
+    <string name="pairing_window_closed">QR-код на компьютере устарел или закрыт. Покажите его снова.</string>
+    <string name="pairing_rejected">Компьютер отклонил подключение. Покажите новый QR-код и повторите.</string>
+    <string name="pairing_connect_failed">Не удалось связаться с компьютером. Проверьте, что на нём запущен Handsfreely и включён Bluetooth.</string>
+
+    <string name="section_permissions">Доступ</string>
+    <string name="allow">Разрешить</string>
+    <string name="granted">Разрешено</string>
+    <string name="perm_bluetooth">Bluetooth</string>
+    <string name="perm_bluetooth_hint">Связь с компьютером</string>
+    <string name="perm_phone">Звонки</string>
+    <string name="perm_phone_hint">Набор, ответ и завершение звонков с компьютера</string>
+    <string name="perm_contacts">Контакты</string>
+    <string name="perm_contacts_hint">Ваши контакты на компьютере</string>
+    <string name="perm_calllog">Журнал звонков</string>
+    <string name="perm_calllog_hint">Недавние звонки и номер звонящего</string>
+    <string name="perm_post">Уведомления</string>
+    <string name="perm_post_hint">Показывает состояние связи</string>
+    <string name="sms_hint">SMS на компьютере работают по Bluetooth без дополнительного доступа здесь: когда телефон спросит, можно ли компьютеру читать сообщения, разрешите.</string>
+    <string name="perm_battery">Без ограничений батареи</string>
+    <string name="perm_battery_hint">Связь не рвётся при выключенном экране</string>
+
+    <string name="section_call_control">Управление звонком</string>
+    <string name="call_control_full">Полное: с компьютера работают ответ, удержание, микрофон, тоновый набор и перевод звука.</string>
+    <string name="call_control_basic">Базовое: с компьютера работают набор, ответ, отклонение и завершение. На Windows 11 удержание, микрофон и тоновый набор компьютер делает сам.</string>
+
+    <string name="footer">Handsfreely %1$s · открытый код · github.com/0fells/Handsfreely</string>
+</resources>

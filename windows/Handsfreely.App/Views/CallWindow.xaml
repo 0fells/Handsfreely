@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Handsfreely.App.Views.CallWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid x:Name="Root" Padding="24,40,24,24" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="DragArea" Height="32" VerticalAlignment="Top" Margin="-24,-40,-24,0" />
+
+        <StackPanel Spacing="6" HorizontalAlignment="Center">
+            <PersonPicture x:Name="Picture" Width="88" Height="88" />
+            <TextBlock x:Name="NameText" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+            <TextBlock x:Name="NumberText" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock x:Name="StateText" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+            <TextBlock x:Name="OtherCallsText" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        </StackPanel>
+
+        <Grid x:Name="Keypad" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+
+        <StackPanel x:Name="Controls" Grid.Row="2" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+            <ToggleButton x:Name="MuteButton" Width="56" Height="56" CornerRadius="28" Click="OnMuteClick">
+                <FontIcon Glyph="&#xE720;" />
+            </ToggleButton>
+            <ToggleButton x:Name="HoldButton" Width="56" Height="56" CornerRadius="28" Click="OnHoldClick">
+                <FontIcon Glyph="&#xE769;" />
+            </ToggleButton>
+            <ToggleButton x:Name="KeypadButton" Width="56" Height="56" CornerRadius="28" Click="OnKeypadClick">
+                <FontIcon Glyph="&#xE75F;" />
+            </ToggleButton>
+            <ToggleButton x:Name="AudioButton" Width="56" Height="56" CornerRadius="28" Click="OnAudioClick">
+                <FontIcon Glyph="&#xE8EA;" />
+            </ToggleButton>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Spacing="8">
+            <TextBlock x:Name="HintText" HorizontalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemFillColorCautionBrush}" TextWrapping="Wrap" TextAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="48" HorizontalAlignment="Center">
+                <Button x:Name="DeclineButton" Style="{StaticResource RedCallButtonStyle}" Click="OnDeclineClick">
+                    <FontIcon Glyph="&#xE778;" FontSize="24" />
+                </Button>
+                <Button x:Name="AnswerButton" Style="{StaticResource GreenCallButtonStyle}" Click="OnAnswerClick">
+                    <FontIcon Glyph="&#xE717;" FontSize="24" />
+                </Button>
+                <Button x:Name="EndButton" Style="{StaticResource RedCallButtonStyle}" Click="OnEndClick">
+                    <FontIcon Glyph="&#xE778;" FontSize="24" />
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

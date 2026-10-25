@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Handsfreely.App.Views.DevicesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:loc="using:Handsfreely.App.Localization"
+    xmlns:local="using:Handsfreely.App.Views">
+
+    <ScrollViewer>
+        <StackPanel Padding="24,16,24,24" Spacing="16" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Text="{x:Bind loc:L.T('nav.devices')}" Style="{StaticResource PageTitleStyle}" />
+
+            <Button Style="{StaticResource AccentButtonStyle}" Click="OnAddClick">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xED14;" FontSize="16" />
+                    <TextBlock Text="{x:Bind loc:L.T('devices.add')}" />
+                </StackPanel>
+            </Button>
+
+            <ItemsControl x:Name="PhonesList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:PhoneRow">
+                        <Border Style="{StaticResource CardStyle}" Margin="0,0,0,8">
+                            <Grid ColumnSpacing="16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xE8EA;" FontSize="28" />
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                        <TextBlock Text="{x:Bind ActiveText}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <TextBlock Text="{x:Bind Model}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Text="{x:Bind State}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                    <TextBlock Text="{x:Bind Details}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                    <Button Content="{x:Bind loc:L.T('devices.use')}" Tag="{x:Bind Id}" Visibility="{x:Bind UseVisibility}" Click="OnUseClick" />
+                                    <Button Tag="{x:Bind Id}" Click="OnRemoveClick" ToolTipService.ToolTip="{x:Bind loc:L.T('devices.remove')}">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock x:Name="EmptyText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{x:Bind loc:L.T('hfp.title')}" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="HfpText" TextWrapping="Wrap" />
+                    <TextBlock x:Name="HfpControlText" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <Button Content="{x:Bind loc:L.T('hfp.retry')}" Click="OnHfpRetryClick" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{x:Bind loc:L.T('sms.title')}" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="SmsText" TextWrapping="Wrap" />
+                    <Button Content="{x:Bind loc:L.T('hfp.retry')}" Click="OnSmsRetryClick" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{x:Bind loc:L.T('devices.howto.title')}" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind loc:L.T('devices.howto')}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

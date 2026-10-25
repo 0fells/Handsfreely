@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap5 desktop com rescap">
+
+  <Identity Name="Handsfreely" Publisher="CN=Handsfreely" Version="0.1.0.0" />
+
+  <Properties>
+    <DisplayName>Handsfreely</DisplayName>
+    <PublisherDisplayName>Handsfreely</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="Handsfreely"
+        Description="Calls, contacts and messages of your Android phone on the PC over Bluetooth"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+
+      <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="tel">
+            <uap:DisplayName>Handsfreely</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+
+        <uap5:Extension Category="windows.startupTask">
+          <uap5:StartupTask TaskId="HandsfreelyStartup" Enabled="false" DisplayName="Handsfreely" />
+        </uap5:Extension>
+
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="f09ca1bf-f4de-40ec-b89a-0f4e2b66a17d" />
+        </desktop:Extension>
+
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="Handsfreely.exe" Arguments="----AppNotificationActivated:" DisplayName="Handsfreely">
+              <com:Class Id="f09ca1bf-f4de-40ec-b89a-0f4e2b66a17d" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <uap:Capability Name="phoneCall" />
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="phoneLineTransportManagement" />
+    <rescap:Capability Name="phoneCallSystem" />
+    <DeviceCapability Name="bluetooth" />
+  </Capabilities>
+</Package>
