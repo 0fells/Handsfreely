@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))=/src/</PathMap>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

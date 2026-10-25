@@ -33,10 +33,25 @@
 - Телефон на Android 10 или новее.
 - На Windows 10 удержание, тоновый набор и перевод звука работают, только если телефон даёт приложению полное управление звонком. На Windows 11 их выполняет сама Windows.
 
+## Установка
+
+Файлы лежат в [последнем релизе](https://github.com/0fells/Handsfreely/releases/latest).
+
+**Компьютер.** Пакет подписан собственным сертификатом проекта, поэтому Windows нужно один раз ему доверить:
+
+1. Скачайте `Handsfreely.cer` и `Handsfreely-x64.msix`.
+2. Откройте PowerShell от имени администратора в папке загрузок и выполните:
+   ```
+   Import-Certificate -FilePath Handsfreely.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople
+   ```
+3. Откройте `Handsfreely-x64.msix` и нажмите "Установить".
+
+**Телефон.** Скачайте `Handsfreely.apk` на телефон, откройте его и разрешите установку из этого источника.
+
 ## Как подключить
 
 1. Сопрягите телефон с компьютером в параметрах Bluetooth Windows.
-2. Установите Handsfreely на компьютер и на телефон.
+2. Установите Handsfreely на компьютер и на телефон (см. "Установка").
 3. На компьютере откройте "Телефоны" и нажмите "Добавить телефон".
 4. На телефоне нажмите "Подключить ПК" и отсканируйте QR-код.
 5. Разрешите в приложении на телефоне доступ к звонкам, контактам и журналу: что не разрешите, то не будет видно на ПК.
@@ -62,6 +77,8 @@ cd android
 ./gradlew testDebugUnitTest assembleDebug
 ```
 
+Подписанные файлы релиза собирает `tools/make-release.ps1` в папку `dist`. Ключи подписи хранятся вне репозитория: для MSIX в `%USERPROFILE%\.signing` (`handsfreely.pfx`, пароль в `handsfreely-pfx.txt`, `Handsfreely.cer`), для APK в `~/.gradle/gradle.properties` (`handsfreelyKeystore`, `handsfreelyKeystorePassword`).
+
 ## Лицензия
 
 [MIT](LICENSE). Сторонние компоненты перечислены в [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
@@ -86,10 +103,25 @@ Works without internet or accounts: everything goes directly between the phone a
 - A phone with Android 10 or later.
 - On Windows 10, hold, keypad tones and moving audio work only when the phone grants the app full call control. On Windows 11, Windows does them itself.
 
+## Installation
+
+The files are in the [latest release](https://github.com/0fells/Handsfreely/releases/latest).
+
+**Computer.** The package is signed with the project's own certificate, so Windows has to trust it once:
+
+1. Download `Handsfreely.cer` and `Handsfreely-x64.msix`.
+2. Open PowerShell as administrator in the downloads folder and run:
+   ```
+   Import-Certificate -FilePath Handsfreely.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople
+   ```
+3. Open `Handsfreely-x64.msix` and click "Install".
+
+**Phone.** Download `Handsfreely.apk` to the phone, open it and allow installs from that source.
+
 ## Getting connected
 
 1. Pair the phone with the computer in Windows Bluetooth settings.
-2. Install Handsfreely on the computer and on the phone.
+2. Install Handsfreely on the computer and on the phone (see "Installation").
 3. On the computer, open "Phones" and click "Add a phone".
 4. On the phone, tap "Connect a PC" and scan the QR code.
 5. In the phone app, allow access to calls, contacts and the call log: whatever you don't allow won't show up on the PC.
@@ -114,6 +146,8 @@ Android (needs JDK 17+ and Android SDK 35):
 cd android
 ./gradlew testDebugUnitTest assembleDebug
 ```
+
+Signed release files are built by `tools/make-release.ps1` into the `dist` folder. Signing keys live outside the repository: for MSIX in `%USERPROFILE%\.signing` (`handsfreely.pfx`, its password in `handsfreely-pfx.txt`, `Handsfreely.cer`), for APK in `~/.gradle/gradle.properties` (`handsfreelyKeystore`, `handsfreelyKeystorePassword`).
 
 ## License
 

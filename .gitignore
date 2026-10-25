@@ -17,3 +17,5 @@ android/app/build/
 *.msix
 *.appx
 *.pfx
+
+dist/

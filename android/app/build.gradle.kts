@@ -16,8 +16,21 @@ android {
         versionName = "0.1.0"
     }
 
+    val releaseKeystore = providers.gradleProperty("handsfreelyKeystore").orNull
+    signingConfigs {
+        if (releaseKeystore != null) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = providers.gradleProperty("handsfreelyKeystorePassword").get()
+                keyAlias = "handsfreely"
+                keyPassword = storePassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -39,6 +52,7 @@ android {
 
     androidResources {
         generateLocaleConfig = true
+        localeFilters += listOf("en", "ru")
     }
 
     testOptions {
