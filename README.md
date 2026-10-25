@@ -52,7 +52,7 @@
 
 - Windows 10 версии 2004 или новее, либо Windows 11, с Bluetooth.
 - Телефон на Android 10 или новее.
-- На Windows 10 удержание, тоновый набор и перевод звука работают, только если телефон даёт приложению полное управление звонком. На Windows 11 их выполняет сама Windows.
+- На Windows 10 удержание, тоновый набор и перевод звука на телефон с компьютера недоступны: для них приложению на телефоне нужно полное управление звонком, а Android выдаёт его только системным приложениям. На Windows 11 эти функции выполняет сама Windows.
 
 ## Установка
 
@@ -61,13 +61,28 @@
 **Компьютер.** Пакет подписан собственным сертификатом проекта, поэтому Windows нужно один раз ему доверить:
 
 1. Скачайте `Handsfreely.cer` и `Handsfreely-x64.msix`.
-2. Откройте PowerShell от имени администратора в папке загрузок и выполните:
-   ```
-   Import-Certificate -FilePath Handsfreely.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople
-   ```
+2. Установите сертификат одним из способов:
+   - Дважды щёлкните `Handsfreely.cer` → "Установить сертификат" → "Локальный компьютер" → "Поместить все сертификаты в следующее хранилище" → "Обзор" → "Доверенные лица" → "Готово".
+   - Или откройте PowerShell от имени администратора и выполните (если файл скачан не в "Загрузки", поправьте путь):
+     ```
+     Import-Certificate -FilePath "$env:USERPROFILE\Downloads\Handsfreely.cer" -CertStoreLocation Cert:\LocalMachine\TrustedPeople
+     ```
 3. Откройте `Handsfreely-x64.msix` и нажмите "Установить".
 
 **Телефон.** Скачайте `Handsfreely.apk` на телефон, откройте его и разрешите установку из этого источника.
+
+## Обновление
+
+Скачайте файлы нового релиза и откройте их так же, как при установке: `Handsfreely-x64.msix` на компьютере (кнопка "Обновить") и `Handsfreely.apk` на телефоне. Новая версия встанет поверх старой, сопряжение и настройки сохранятся. Сертификат второй раз ставить не нужно.
+
+## Удаление
+
+- **Компьютер.** Пуск → правой кнопкой по Handsfreely → "Удалить" (или "Параметры" → "Приложения"). Вместе с программой удаляются её настройки и сопряжение с телефонами. Сертификат остаётся; убрать его можно в PowerShell от имени администратора:
+  ```
+  Get-ChildItem Cert:\LocalMachine\TrustedPeople | Where-Object Subject -eq "CN=Handsfreely" | Remove-Item
+  ```
+  Bluetooth-сопряжение телефона с компьютером удаляется отдельно, в параметрах Bluetooth Windows.
+- **Телефон.** Удерживайте значок Handsfreely → "Удалить" (или "Настройки" → "Приложения" → Handsfreely → "Удалить"). Все выданные доступы снимаются вместе с приложением.
 
 ## Как подключить
 
@@ -84,12 +99,14 @@
 
 ## Сборка
 
-Windows (нужен .NET SDK 10 и режим разработчика для отладочной установки):
+Windows (нужен .NET SDK 10):
 
 ```
 dotnet test windows/Handsfreely.Core.Tests
 dotnet build windows/Handsfreely.App -p:Platform=x64
 ```
+
+Отладочную версию собирает, регистрирует и запускает `powershell -File tools/dev-run.ps1` (нужен режим разработчика Windows). Отладочная версия и версия из релиза не уживаются: перед установкой релиза снимите отладочную (`Get-AppxPackage Handsfreely | Remove-AppxPackage -PreserveApplicationData` сохранит сопряжение и настройки), а перед отладкой удалите установленную.
 
 Android (нужны JDK 17+ и Android SDK 35):
 
@@ -145,7 +162,7 @@ Phone:
 
 - Windows 10 version 2004 or later, or Windows 11, with Bluetooth.
 - A phone with Android 10 or later.
-- On Windows 10, hold, keypad tones and moving audio work only when the phone grants the app full call control. On Windows 11, Windows does them itself.
+- On Windows 10, hold, keypad tones and moving audio to the phone are not available from the computer: they need full call control in the phone app, and Android grants it only to system apps. On Windows 11, Windows handles these itself.
 
 ## Installation
 
@@ -154,13 +171,28 @@ The files are in the [latest release](https://github.com/0fells/Handsfreely/rele
 **Computer.** The package is signed with the project's own certificate, so Windows has to trust it once:
 
 1. Download `Handsfreely.cer` and `Handsfreely-x64.msix`.
-2. Open PowerShell as administrator in the downloads folder and run:
-   ```
-   Import-Certificate -FilePath Handsfreely.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople
-   ```
+2. Install the certificate in one of two ways:
+   - Double-click `Handsfreely.cer` → "Install Certificate" → "Local Machine" → "Place all certificates in the following store" → "Browse" → "Trusted People" → "Finish".
+   - Or open PowerShell as administrator and run (fix the path if the file is not in "Downloads"):
+     ```
+     Import-Certificate -FilePath "$env:USERPROFILE\Downloads\Handsfreely.cer" -CertStoreLocation Cert:\LocalMachine\TrustedPeople
+     ```
 3. Open `Handsfreely-x64.msix` and click "Install".
 
 **Phone.** Download `Handsfreely.apk` to the phone, open it and allow installs from that source.
+
+## Updating
+
+Download the files of the new release and open them as during installation: `Handsfreely-x64.msix` on the computer (the "Update" button) and `Handsfreely.apk` on the phone. The new version installs over the old one, and pairing and settings are kept. The certificate does not need to be installed again.
+
+## Uninstalling
+
+- **Computer.** Start → right-click Handsfreely → "Uninstall" (or "Settings" → "Apps"). The program's settings and phone pairings are removed with it. The certificate stays; to remove it, run in PowerShell as administrator:
+  ```
+  Get-ChildItem Cert:\LocalMachine\TrustedPeople | Where-Object Subject -eq "CN=Handsfreely" | Remove-Item
+  ```
+  The Bluetooth pairing between the phone and the computer is removed separately, in Windows Bluetooth settings.
+- **Phone.** Long-press the Handsfreely icon → "Uninstall" (or "Settings" → "Apps" → Handsfreely → "Uninstall"). All granted access goes away with the app.
 
 ## Getting connected
 
@@ -177,12 +209,14 @@ Call audio uses the standard Bluetooth HFP profile: the computer becomes the pho
 
 ## Building
 
-Windows (needs the .NET 10 SDK and Developer Mode for a debug install):
+Windows (needs the .NET 10 SDK):
 
 ```
 dotnet test windows/Handsfreely.Core.Tests
 dotnet build windows/Handsfreely.App -p:Platform=x64
 ```
+
+`powershell -File tools/dev-run.ps1` builds, registers and starts a debug version (needs Windows Developer Mode). A debug version and a release version cannot coexist: before installing a release, remove the debug one (`Get-AppxPackage Handsfreely | Remove-AppxPackage -PreserveApplicationData` keeps pairing and settings), and before debugging, uninstall the installed one.
 
 Android (needs JDK 17+ and Android SDK 35):
 
