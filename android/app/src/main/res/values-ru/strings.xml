@@ -42,6 +42,14 @@
     <string name="perm_calllog_hint">Недавние звонки и номер звонящего</string>
     <string name="perm_post">Уведомления</string>
     <string name="perm_post_hint">Показывает состояние связи</string>
+    <string name="perm_camera">Камера</string>
+    <string name="perm_camera_hint">Сканирование QR-кода компьютера</string>
+    <string name="revoke">Отозвать</string>
+    <string name="revoke_title">Отозвать доступ \"%1$s\"?</string>
+    <string name="revoke_text">Android отзывает доступ только после закрытия приложения. Handsfreely закроется, и связь с компьютером прервётся, пока вы снова его не откроете.</string>
+    <string name="revoke_confirm">Отозвать и закрыть</string>
+    <string name="revoke_battery_hint">Найдите Handsfreely в списке и снова включите оптимизацию батареи</string>
+    <string name="revoke_settings_hint">Откройте \"Разрешения\" и отключите ненужный доступ</string>
     <string name="sms_hint">SMS на компьютере работают по Bluetooth без дополнительного доступа здесь: когда телефон спросит, можно ли компьютеру читать сообщения, разрешите.</string>
     <string name="perm_battery">Без ограничений батареи</string>
     <string name="perm_battery_hint">Связь не рвётся при выключенном экране</string>

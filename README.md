@@ -27,6 +27,27 @@
 
 Работает без интернета и без учётных записей: всё идёт напрямую между телефоном и компьютером.
 
+## Скриншоты
+
+Компьютер:
+
+<p align="center">
+  <img src="docs/screenshots/windows-calls.png" width="49%" alt="Звонки">
+  <img src="docs/screenshots/windows-messages.png" width="49%" alt="Сообщения">
+</p>
+<p align="center">
+  <img src="docs/screenshots/windows-contacts.png" width="49%" alt="Контакты">
+  <img src="docs/screenshots/windows-calls-dark.png" width="49%" alt="Тёмная тема">
+</p>
+
+Телефон:
+
+<p align="center">
+  <img src="docs/screenshots/android-main.png" width="200" alt="Главный экран">
+  <img src="docs/screenshots/android-access.png" width="200" alt="Доступ">
+  <img src="docs/screenshots/android-main-dark.png" width="200" alt="Тёмная тема">
+</p>
+
 ## Требования
 
 - Windows 10 версии 2004 или новее, либо Windows 11, с Bluetooth.
@@ -54,7 +75,7 @@
 2. Установите Handsfreely на компьютер и на телефон (см. "Установка").
 3. На компьютере откройте "Телефоны" и нажмите "Добавить телефон".
 4. На телефоне нажмите "Подключить ПК" и отсканируйте QR-код.
-5. Разрешите в приложении на телефоне доступ к звонкам, контактам и журналу: что не разрешите, то не будет видно на ПК.
+5. Разрешите в приложении на телефоне доступ к звонкам, контактам и журналу: что не разрешите, то не будет видно на ПК. Там же любой доступ можно отозвать.
 6. Когда телефон спросит, можно ли компьютеру получить доступ к сообщениям, разрешите: так работают SMS.
 
 ## Как это устроено
@@ -77,6 +98,8 @@ cd android
 ./gradlew testDebugUnitTest assembleDebug
 ```
 
+Скриншоты в `docs/screenshots` пересобираются с выдуманными данными: Windows - `powershell -File tools/screenshots.ps1` (программа запускается в демо-режиме `--demo`), Android - `./gradlew testDebugUnitTest -Pscreenshots` (без телефона, Robolectric).
+
 Подписанные файлы релиза собирает `tools/make-release.ps1` в папку `dist`. Ключи подписи хранятся вне репозитория: для MSIX в `%USERPROFILE%\.signing` (`handsfreely.pfx`, пароль в `handsfreely-pfx.txt`, `Handsfreely.cer`), для APK в `~/.gradle/gradle.properties` (`handsfreelyKeystore`, `handsfreelyKeystorePassword`).
 
 ## Лицензия
@@ -96,6 +119,27 @@ cd android
 - Russian and English interface.
 
 Works without internet or accounts: everything goes directly between the phone and the computer.
+
+## Screenshots
+
+Computer:
+
+<p align="center">
+  <img src="docs/screenshots/windows-calls-en.png" width="49%" alt="Calls">
+  <img src="docs/screenshots/windows-messages-en.png" width="49%" alt="Messages">
+</p>
+<p align="center">
+  <img src="docs/screenshots/windows-contacts-en.png" width="49%" alt="Contacts">
+  <img src="docs/screenshots/windows-calls-dark-en.png" width="49%" alt="Dark theme">
+</p>
+
+Phone:
+
+<p align="center">
+  <img src="docs/screenshots/android-main-en.png" width="200" alt="Main screen">
+  <img src="docs/screenshots/android-access-en.png" width="200" alt="Access">
+  <img src="docs/screenshots/android-main-dark-en.png" width="200" alt="Dark theme">
+</p>
 
 ## Requirements
 
@@ -124,7 +168,7 @@ The files are in the [latest release](https://github.com/0fells/Handsfreely/rele
 2. Install Handsfreely on the computer and on the phone (see "Installation").
 3. On the computer, open "Phones" and click "Add a phone".
 4. On the phone, tap "Connect a PC" and scan the QR code.
-5. In the phone app, allow access to calls, contacts and the call log: whatever you don't allow won't show up on the PC.
+5. In the phone app, allow access to calls, contacts and the call log: whatever you don't allow won't show up on the PC. Any access can be revoked there as well.
 6. When the phone asks whether the computer may access messages, allow it: this is how SMS work.
 
 ## How it works
@@ -146,6 +190,8 @@ Android (needs JDK 17+ and Android SDK 35):
 cd android
 ./gradlew testDebugUnitTest assembleDebug
 ```
+
+Screenshots in `docs/screenshots` are rebuilt with made-up data: Windows - `powershell -File tools/screenshots.ps1` (the program runs in `--demo` mode), Android - `./gradlew testDebugUnitTest -Pscreenshots` (no phone needed, Robolectric).
 
 Signed release files are built by `tools/make-release.ps1` into the `dist` folder. Signing keys live outside the repository: for MSIX in `%USERPROFILE%\.signing` (`handsfreely.pfx`, its password in `handsfreely-pfx.txt`, `Handsfreely.cer`), for APK in `~/.gradle/gradle.properties` (`handsfreelyKeystore`, `handsfreelyKeystorePassword`).
 

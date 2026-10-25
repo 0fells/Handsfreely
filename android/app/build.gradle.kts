@@ -12,8 +12,8 @@ android {
         applicationId = "io.github.handsfreely"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.1.1"
     }
 
     val releaseKeystore = providers.gradleProperty("handsfreelyKeystore").orNull
@@ -57,6 +57,16 @@ android {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all { test ->
+            if (project.hasProperty("screenshots")) {
+                test.filter.includeTestsMatching("*ScreenshotTest")
+                test.systemProperty("roborazzi.test.record", "true")
+                test.systemProperty("handsfreely.screenshots.dir", rootProject.file("../docs/screenshots").absolutePath)
+            } else {
+                test.filter.excludeTestsMatching("*ScreenshotTest")
+            }
+        }
     }
 }
 
@@ -76,4 +86,10 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")
+    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi:1.43.1")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:1.43.1")
+    testImplementation(composeBom)
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

@@ -27,14 +27,65 @@ function New-Icon([int]$w, [int]$h, [double]$scale, [bool]$plate) {
     } else {
         $glyphColor = [System.Drawing.Color]::FromArgb(255, 33, 107, 222)
     }
-    $font = New-Object System.Drawing.Font "Segoe MDL2 Assets", ([float]($side * 0.5)), ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)
-    $fmt = New-Object System.Drawing.StringFormat
-    $fmt.Alignment = "Center"
-    $fmt.LineAlignment = "Center"
-    $glyph = [string][char]0xE717
-    $g.DrawString($glyph, $font, (New-Object System.Drawing.SolidBrush $glyphColor), (New-Object System.Drawing.RectangleF $x, $y, $side, $side), $fmt)
+    $box = $side * $(if ($side -lt 40) { 0.74 } else { 0.62 })
+    $g.TranslateTransform([float]($x + ($side - $box) / 2), [float]($y + ($side - $box) / 2))
+    $g.ScaleTransform([float]($box / 24), [float]($box / 24))
+    Draw-Glyph $g $glyphColor
     $g.Dispose()
     return $bmp
+}
+
+$handset = "M6.62,10.79c1.44,2.83 3.76,5.14 6.59,6.59l2.2,-2.2c0.27,-0.27 0.67,-0.36 1.02,-0.24 1.12,0.37 2.33,0.57 3.57,0.57 0.55,0 1,0.45 1,1V20c0,0.55 -0.45,1 -1,1 -9.39,0 -17,-7.61 -17,-17 0,-0.55 0.45,-1 1,-1h3.5c0.55,0 1,0.45 1,1 0,1.25 0.2,2.45 0.57,3.57 0.11,0.35 0.03,0.74 -0.25,1.02l-2.2,2.2z"
+
+function Draw-Glyph([System.Drawing.Graphics]$g, [System.Drawing.Color]$color) {
+    $pen = New-Object System.Drawing.Pen $color, 2
+    $pen.StartCap = "Round"
+    $pen.EndCap = "Round"
+    $pen.LineJoin = "Round"
+    $frame = New-Object System.Drawing.Drawing2D.GraphicsPath
+    $r = 2.5
+    $frame.AddArc(2.5, 3.5, 2 * $r, 2 * $r, 180, 90)
+    $frame.AddArc(21.5 - 2 * $r, 3.5, 2 * $r, 2 * $r, 270, 90)
+    $frame.AddArc(21.5 - 2 * $r, 16.5 - 2 * $r, 2 * $r, 2 * $r, 0, 90)
+    $frame.AddArc(2.5, 16.5 - 2 * $r, 2 * $r, 2 * $r, 90, 90)
+    $frame.CloseFigure()
+    $g.DrawPath($pen, $frame)
+    $g.DrawLine($pen, 12, 16.5, 12, 20)
+    $g.DrawLine($pen, 8.5, 20.5, 15.5, 20.5)
+    $phone = ConvertFrom-SvgPath $handset
+    $m = New-Object System.Drawing.Drawing2D.Matrix
+    $m.Translate(12, 10)
+    $m.Scale(0.44, 0.44)
+    $m.Translate(-12, -12)
+    $phone.Transform($m)
+    $g.FillPath((New-Object System.Drawing.SolidBrush $color), $phone)
+}
+
+function ConvertFrom-SvgPath([string]$d) {
+    $p = New-Object System.Drawing.Drawing2D.GraphicsPath
+    $tokens = @([regex]::Matches($d, '[A-Za-z]|-?(?:\d+\.?\d*|\.\d+)') | ForEach-Object { $_.Value })
+    $i = 0; $cmd = ""; $cx = 0.0; $cy = 0.0; $sx = 0.0; $sy = 0.0
+    function Num { $script:i++; return [double]::Parse($tokens[$script:i - 1], [Globalization.CultureInfo]::InvariantCulture) }
+    $script:i = 0
+    while ($script:i -lt $tokens.Count) {
+        if ($tokens[$script:i] -match '^[A-Za-z]$') { $cmd = $tokens[$script:i]; $script:i++ }
+        $rel = $cmd -ceq $cmd.ToLower()
+        $ox = if ($rel) { $cx } else { 0.0 }
+        $oy = if ($rel) { $cy } else { 0.0 }
+        switch ($cmd.ToUpper()) {
+            "M" { $cx = $ox + (Num); $cy = $oy + (Num); $sx = $cx; $sy = $cy; $p.StartFigure(); $cmd = if ($rel) { "l" } else { "L" } }
+            "L" { $nx = $ox + (Num); $ny = $oy + (Num); $p.AddLine([float]$cx, [float]$cy, [float]$nx, [float]$ny); $cx = $nx; $cy = $ny }
+            "H" { $nx = $ox + (Num); $p.AddLine([float]$cx, [float]$cy, [float]$nx, [float]$cy); $cx = $nx }
+            "V" { $ny = $oy + (Num); $p.AddLine([float]$cx, [float]$cy, [float]$cx, [float]$ny); $cy = $ny }
+            "C" {
+                $x1 = $ox + (Num); $y1 = $oy + (Num); $x2 = $ox + (Num); $y2 = $oy + (Num); $nx = $ox + (Num); $ny = $oy + (Num)
+                $p.AddBezier([float]$cx, [float]$cy, [float]$x1, [float]$y1, [float]$x2, [float]$y2, [float]$nx, [float]$ny)
+                $cx = $nx; $cy = $ny
+            }
+            "Z" { $p.CloseFigure(); $cx = $sx; $cy = $sy }
+        }
+    }
+    return $p
 }
 
 function Save([System.Drawing.Bitmap]$bmp, [string]$name) {

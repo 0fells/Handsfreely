@@ -23,6 +23,7 @@ public sealed class SmsService
     private CancellationTokenSource? _poll;
     private HashSet<string>? _knownInbox;
     private List<MapMessageInfo> _cache = [];
+    private bool _demo;
 
     public SmsService(ContactBook contacts) => _contacts = contacts;
 
@@ -32,6 +33,7 @@ public sealed class SmsService
 
     public async Task AttachAsync(string? bluetoothAddress)
     {
+        if (_demo) return;
         if (bluetoothAddress == _address && State == SmsState.Connected) return;
         _poll?.Cancel();
         await _gate.WaitAsync();
@@ -61,7 +63,7 @@ public sealed class SmsService
 
     public async Task<IReadOnlyList<SmsThread>> ThreadsAsync(CancellationToken ct = default)
     {
-        var all = await RunAsync(async map =>
+        var all = _demo ? _cache : await RunAsync(async map =>
         {
             var inbox = await map.ListAsync(MapFolder.Inbox, ListSize, 0, ct);
             var sent = await map.ListAsync(MapFolder.Sent, ListSize, 0, ct);
@@ -89,7 +91,7 @@ public sealed class SmsService
         return result;
     }
 
-    public Task SendAsync(string to, string text, CancellationToken ct = default) =>
+    public Task SendAsync(string to, string text, CancellationToken ct = default) => _demo ? Task.CompletedTask :
         RunAsync(async map =>
         {
             await map.SendAsync(to, text, ct);
@@ -100,7 +102,7 @@ public sealed class SmsService
     {
         var unread = _cache.Where(m => !m.Read && ThreadKey(m.Address) == threadId).ToList();
         if (unread.Count == 0) return;
-        await RunAsync(async map =>
+        if (!_demo) await RunAsync(async map =>
         {
             foreach (var m in unread) await map.MarkReadAsync(m.Handle, ct);
             return true;
@@ -251,6 +253,13 @@ public sealed class SmsService
 
     private static long ToUnixMs(DateTime local) =>
         local == DateTime.MinValue ? 0 : new DateTimeOffset(DateTime.SpecifyKind(local, DateTimeKind.Local)).ToUnixTimeMilliseconds();
+
+    public void UseDemo(List<MapMessageInfo> messages)
+    {
+        _demo = true;
+        _cache = messages;
+        SetState(SmsState.Connected);
+    }
 
     private void SetState(SmsState state)
     {

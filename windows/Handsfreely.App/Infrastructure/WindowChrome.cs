@@ -24,6 +24,11 @@ public static class WindowChrome
     {
         window.ExtendsContentIntoTitleBar = true;
         window.SetTitleBar(dragRegion);
+        if (window.Content is FrameworkElement root)
+        {
+            ApplyCaptionColors(window, root);
+            root.ActualThemeChanged += (_, _) => ApplyCaptionColors(window, root);
+        }
         if (IsWindows11) return;
 
         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
@@ -85,6 +90,22 @@ public static class WindowChrome
         GetClientRect(hwnd, out var client);
         var row = new Rect { Left = 0, Top = 0, Right = client.Right, Bottom = 1 };
         InvalidateRect(hwnd, ref row, false);
+    }
+
+    private static void ApplyCaptionColors(Window window, FrameworkElement root)
+    {
+        bool dark = root.ActualTheme == ElementTheme.Dark;
+        var bar = window.AppWindow.TitleBar;
+        var fg = dark ? Windows.UI.Color.FromArgb(255, 255, 255, 255) : Windows.UI.Color.FromArgb(255, 0, 0, 0);
+        var transparent = Windows.UI.Color.FromArgb(0, 0, 0, 0);
+        bar.ButtonBackgroundColor = transparent;
+        bar.ButtonInactiveBackgroundColor = transparent;
+        bar.ButtonForegroundColor = fg;
+        bar.ButtonHoverForegroundColor = fg;
+        bar.ButtonPressedForegroundColor = fg;
+        bar.ButtonInactiveForegroundColor = dark ? Windows.UI.Color.FromArgb(255, 150, 150, 150) : Windows.UI.Color.FromArgb(255, 110, 110, 110);
+        bar.ButtonHoverBackgroundColor = dark ? Windows.UI.Color.FromArgb(24, 255, 255, 255) : Windows.UI.Color.FromArgb(24, 0, 0, 0);
+        bar.ButtonPressedBackgroundColor = dark ? Windows.UI.Color.FromArgb(40, 255, 255, 255) : Windows.UI.Color.FromArgb(40, 0, 0, 0);
     }
 
     private static uint TopRowColor(IntPtr hwnd, bool active)

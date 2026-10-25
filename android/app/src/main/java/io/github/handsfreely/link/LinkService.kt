@@ -287,6 +287,7 @@ class LinkService : Service() {
         )
         return NotificationCompat.Builder(this, HandsfreelyApp.CHANNEL_LINK)
             .setSmallIcon(R.drawable.ic_stat_link)
+            .setColor(ContextCompat.getColor(this, R.color.ic_launcher_background))
             .setContentTitle(getString(R.string.app_name))
             .setContentText(text)
             .setContentIntent(open)
@@ -314,6 +315,10 @@ class LinkService : Service() {
         fun start(context: Context) {
             if (!DeviceState.bluetoothGranted(context)) return
             ContextCompat.startForegroundService(context, Intent(context, LinkService::class.java))
+        }
+
+        fun stop(context: Context) {
+            context.stopService(Intent(context, LinkService::class.java))
         }
     }
 }

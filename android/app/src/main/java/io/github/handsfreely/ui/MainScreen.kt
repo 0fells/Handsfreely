@@ -1,5 +1,6 @@
 package io.github.handsfreely.ui
 
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,26 +57,33 @@ import io.github.handsfreely.link.PcStore
 
 data class PermissionState(
     val bluetooth: Boolean = false,
+    val camera: Boolean = false,
     val groups: Set<String> = emptySet(),
     val postNotifications: Boolean = false,
     val batteryUnrestricted: Boolean = false,
     val fullCallControl: Boolean = false,
 )
 
-enum class PermissionItem(@StringRes val title: Int, @StringRes val hint: Int, val group: String) {
-    BLUETOOTH(R.string.perm_bluetooth, R.string.perm_bluetooth_hint, ""),
-    PHONE(R.string.perm_phone, R.string.perm_phone_hint, "phone"),
-    CONTACTS(R.string.perm_contacts, R.string.perm_contacts_hint, "contacts"),
-    CALLLOG(R.string.perm_calllog, R.string.perm_calllog_hint, "calllog"),
-    POST_NOTIFICATIONS(R.string.perm_post, R.string.perm_post_hint, ""),
-    BATTERY(R.string.perm_battery, R.string.perm_battery_hint, "");
+enum class PermissionItem(@StringRes val title: Int, @StringRes val hint: Int, val group: String, val runtime: Boolean) {
+    BLUETOOTH(R.string.perm_bluetooth, R.string.perm_bluetooth_hint, "", true),
+    CAMERA(R.string.perm_camera, R.string.perm_camera_hint, "", true),
+    PHONE(R.string.perm_phone, R.string.perm_phone_hint, "phone", true),
+    CONTACTS(R.string.perm_contacts, R.string.perm_contacts_hint, "contacts", true),
+    CALLLOG(R.string.perm_calllog, R.string.perm_calllog_hint, "calllog", true),
+    POST_NOTIFICATIONS(R.string.perm_post, R.string.perm_post_hint, "", false),
+    BATTERY(R.string.perm_battery, R.string.perm_battery_hint, "", false);
 
     fun granted(s: PermissionState) = when (this) {
         BLUETOOTH -> s.bluetooth
+        CAMERA -> s.camera
         POST_NOTIFICATIONS -> s.postNotifications
         BATTERY -> s.batteryUnrestricted
         else -> group in s.groups
     }
+
+    fun revocable(sdk: Int) = this != BLUETOOTH || sdk >= 31
+
+    fun revokeClosesApp(sdk: Int) = runtime && sdk >= 33
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,13 +94,16 @@ fun MainScreen(
     onConnectPc: () -> Unit,
     onForget: (String) -> Unit,
     onRequest: (PermissionItem) -> Unit,
+    onRevoke: (PermissionItem) -> Unit,
     onLanguage: (String?) -> Unit,
     currentLanguage: String,
+    sdk: Int = Build.VERSION.SDK_INT,
 ) {
     val pcs by store.pcs.collectAsState()
     val status by LinkState.status.collectAsState()
     val pairing by LinkState.pairing.collectAsState()
     var forget by remember { mutableStateOf<PcRecord?>(null) }
+    var revoke by remember { mutableStateOf<PermissionItem?>(null) }
     var languageMenu by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -137,7 +148,15 @@ fun MainScreen(
             item { PairingCard(pairing) }
 
             item { SectionTitle(R.string.section_permissions) }
-            items(PermissionItem.entries) { PermissionRow(it, it.granted(permissions)) { onRequest(it) } }
+            items(PermissionItem.entries) { item ->
+                PermissionRow(
+                    item = item,
+                    granted = item.granted(permissions),
+                    revocable = item.revocable(sdk),
+                    onRequest = { onRequest(item) },
+                    onRevoke = { if (item.revokeClosesApp(sdk)) revoke = item else onRevoke(item) },
+                )
+            }
             item { Text(stringResource(R.string.sms_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
 
             item { SectionTitle(R.string.section_call_control) }
@@ -171,6 +190,21 @@ fun MainScreen(
                 }) { Text(stringResource(R.string.remove)) }
             },
             dismissButton = { TextButton(onClick = { forget = null }) { Text(stringResource(R.string.cancel)) } },
+        )
+    }
+
+    revoke?.let { item ->
+        AlertDialog(
+            onDismissRequest = { revoke = null },
+            title = { Text(stringResource(R.string.revoke_title, stringResource(item.title))) },
+            text = { Text(stringResource(R.string.revoke_text)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    revoke = null
+                    onRevoke(item)
+                }) { Text(stringResource(R.string.revoke_confirm)) }
+            },
+            dismissButton = { TextButton(onClick = { revoke = null }) { Text(stringResource(R.string.cancel)) } },
         )
     }
 }
@@ -235,15 +269,21 @@ private fun PairingCard(state: PairingState) {
 }
 
 @Composable
-private fun PermissionRow(item: PermissionItem, granted: Boolean, onRequest: () -> Unit) {
+private fun PermissionRow(item: PermissionItem, granted: Boolean, revocable: Boolean, onRequest: () -> Unit, onRevoke: () -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        if (granted) {
+            Icon(Icons.Filled.CheckCircle, contentDescription = stringResource(R.string.granted), tint = MaterialTheme.colorScheme.primary)
+        } else {
+            Spacer(Modifier.width(24.dp))
+        }
+        Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(stringResource(item.title), style = MaterialTheme.typography.bodyLarge)
             Text(stringResource(item.hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Spacer(Modifier.width(12.dp))
         if (granted) {
-            Icon(Icons.Filled.CheckCircle, contentDescription = stringResource(R.string.granted), tint = MaterialTheme.colorScheme.primary)
+            if (revocable) TextButton(onClick = onRevoke) { Text(stringResource(R.string.revoke)) }
         } else {
             FilledTonalButton(onClick = onRequest) { Text(stringResource(R.string.allow)) }
         }

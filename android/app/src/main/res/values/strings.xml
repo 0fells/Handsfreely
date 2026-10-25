@@ -45,6 +45,14 @@
     <string name="perm_calllog_hint">Recent calls and the caller\'s number</string>
     <string name="perm_post">Notifications</string>
     <string name="perm_post_hint">Shows the connection status</string>
+    <string name="perm_camera">Camera</string>
+    <string name="perm_camera_hint">Scanning the QR code on the computer</string>
+    <string name="revoke">Revoke</string>
+    <string name="revoke_title">Revoke access to \"%1$s\"?</string>
+    <string name="revoke_text">Android revokes access only after the app closes. Handsfreely will close, and the connection to the computer stops until you open the app again.</string>
+    <string name="revoke_confirm">Revoke and close</string>
+    <string name="revoke_battery_hint">Find Handsfreely in the list and turn battery optimization back on</string>
+    <string name="revoke_settings_hint">Open \"Permissions\" and turn off the access you no longer want</string>
     <string name="sms_hint">SMS on the computer work over Bluetooth without extra access here: when the phone asks whether the computer may access messages, allow it.</string>
     <string name="perm_battery">No battery restrictions</string>
     <string name="perm_battery_hint">Keeps the connection while the screen is off</string>

@@ -36,6 +36,7 @@ public sealed class HfpService
 
     public async Task AttachAsync(string? bluetoothAddress, [System.Runtime.CompilerServices.CallerMemberName] string caller = "")
     {
+        if (Demo.Enabled) return;
         await Gate.WaitAsync();
         try
         {
@@ -200,6 +201,8 @@ public sealed class HfpService
         _line = null;
         _device = null;
     }
+
+    public void UseDemo() => SetState(HfpState.Connected);
 
     private void SetState(HfpState state)
     {

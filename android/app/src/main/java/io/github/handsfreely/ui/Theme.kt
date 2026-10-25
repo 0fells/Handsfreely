@@ -14,12 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 private val Blue = Color(0xFF2167DE)
 
 @Composable
-fun HandsfreelyTheme(content: @Composable () -> Unit) {
+fun HandsfreelyTheme(dynamicColor: Boolean = true, content: @Composable () -> Unit) {
     val dark = isSystemInDarkTheme()
     val context = LocalContext.current
     val colors = when {
-        Build.VERSION.SDK_INT >= 31 && dark -> dynamicDarkColorScheme(context)
-        Build.VERSION.SDK_INT >= 31 -> dynamicLightColorScheme(context)
+        dynamicColor && Build.VERSION.SDK_INT >= 31 && dark -> dynamicDarkColorScheme(context)
+        dynamicColor && Build.VERSION.SDK_INT >= 31 -> dynamicLightColorScheme(context)
         dark -> darkColorScheme(primary = Color(0xFF8AB4FF))
         else -> lightColorScheme(primary = Blue)
     }

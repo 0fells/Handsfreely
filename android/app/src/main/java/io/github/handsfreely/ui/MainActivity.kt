@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                     onConnectPc = ::startPairing,
                     onForget = { id -> LinkService.instance?.forget(id) ?: HandsfreelyApp.store(this).remove(id) },
                     onRequest = ::request,
+                    onRevoke = ::revoke,
                     onLanguage = ::setLanguage,
                     currentLanguage = AppCompatDelegate.getApplicationLocales().toLanguageTags().take(2),
                 )
@@ -84,6 +86,7 @@ class MainActivity : AppCompatActivity() {
     private fun refresh() {
         permissionState = PermissionState(
             bluetooth = DeviceState.bluetoothGranted(this),
+            camera = DeviceState.has(this, Manifest.permission.CAMERA),
             groups = DeviceState.grantedGroups(this).toSet(),
             postNotifications = Build.VERSION.SDK_INT < 33 || DeviceState.has(this, Manifest.permission.POST_NOTIFICATIONS),
             batteryUnrestricted = getSystemService(PowerManager::class.java).isIgnoringBatteryOptimizations(packageName),
@@ -94,12 +97,40 @@ class MainActivity : AppCompatActivity() {
     private fun request(item: PermissionItem) {
         when (item) {
             PermissionItem.BLUETOOTH -> if (Build.VERSION.SDK_INT >= 31) permissionsLauncher.launch(arrayOf(Manifest.permission.BLUETOOTH_CONNECT))
+            PermissionItem.CAMERA -> permissionsLauncher.launch(arrayOf(Manifest.permission.CAMERA))
             PermissionItem.POST_NOTIFICATIONS -> if (Build.VERSION.SDK_INT >= 33) permissionsLauncher.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
             PermissionItem.BATTERY -> startActivity(
                 Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName"))
             )
             else -> permissionsLauncher.launch(DeviceState.groups[item.group].orEmpty().toTypedArray())
         }
+    }
+
+    private fun revoke(item: PermissionItem) {
+        when {
+            item == PermissionItem.POST_NOTIFICATIONS -> startActivity(
+                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            )
+            item == PermissionItem.BATTERY -> {
+                Toast.makeText(this, R.string.revoke_battery_hint, Toast.LENGTH_LONG).show()
+                startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+            }
+            Build.VERSION.SDK_INT >= 33 && item.runtime -> {
+                revokeSelfPermissionsOnKill(permissionsOf(item))
+                LinkService.stop(this)
+                finishAndRemoveTask()
+            }
+            else -> {
+                Toast.makeText(this, R.string.revoke_settings_hint, Toast.LENGTH_LONG).show()
+                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
+            }
+        }
+    }
+
+    private fun permissionsOf(item: PermissionItem): List<String> = when (item) {
+        PermissionItem.BLUETOOTH -> listOf(Manifest.permission.BLUETOOTH_CONNECT)
+        PermissionItem.CAMERA -> listOf(Manifest.permission.CAMERA)
+        else -> DeviceState.groups[item.group].orEmpty()
     }
 
     private fun startPairing() {

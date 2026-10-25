@@ -11,7 +11,7 @@ public static class Program
     private static int Main(string[] args)
     {
         WinRT.ComWrappersSupport.InitializeComWrappers();
-        if (RedirectToRunningInstance()) return 0;
+        if (!Infrastructure.Demo.Enabled && RedirectToRunningInstance()) return 0;
 
         Application.Start(p =>
         {

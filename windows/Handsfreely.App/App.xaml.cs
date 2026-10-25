@@ -24,6 +24,7 @@ public partial class App : Application
     public App()
     {
         Current = this;
+        if (Demo.Enabled) RequestedTheme = Demo.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
         InitializeComponent();
         UnhandledException += (_, e) =>
         {
@@ -51,9 +52,9 @@ public partial class App : Application
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         Ui.Init(DispatcherQueue.GetForCurrentThread());
-        Log.Info($"start {typeof(App).Assembly.GetName().Version}, windows call control: {HfpService.CallControlAvailable}");
+        Log.Info($"start {typeof(App).Assembly.GetName().Version}, windows call control: {HfpService.CallControlAvailable}{(Demo.Enabled ? ", demo" : "")}");
         Toasts.Invoked += (a, input) => Ui.Run(() => OnToast(a, input));
-        Toasts.Register();
+        if (!Demo.Enabled) Toasts.Register();
 
         var key = await PcIdentity.LoadOrCreateAsync();
         Hub = new PhoneHub(Devices, key);
@@ -66,6 +67,16 @@ public partial class App : Application
 
         Window = new MainWindow();
         Window.Closed += OnMainWindowClosed;
+        if (Demo.Enabled)
+        {
+            BluetoothAvailable = true;
+            Window.Activate();
+            await DemoPhone.StartAsync(this);
+            await ReloadContactsAsync();
+            Window.RefreshStatus();
+            Window.Navigate(Demo.Page, Demo.Page == AppPage.Messages ? (await Sms.ThreadsAsync())[0].ThreadId : null);
+            return;
+        }
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
         if (activation.Kind != ExtendedActivationKind.StartupTask) Window.Activate();
 

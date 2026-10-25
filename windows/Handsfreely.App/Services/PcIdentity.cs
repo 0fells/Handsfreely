@@ -11,6 +11,7 @@ public static class PcIdentity
 
     public static async Task<P256KeyPair> LoadOrCreateAsync()
     {
+        if (Demo.Enabled) return P256KeyPair.Generate();
         var provider = new DataProtectionProvider("LOCAL=user");
         if (File.Exists(PathName))
         {

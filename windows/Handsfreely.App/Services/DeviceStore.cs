@@ -32,7 +32,7 @@ public sealed class DeviceStore : IPairingAuthority
     private byte[]? _token;
     private DateTimeOffset _tokenExpires;
 
-    public DeviceStore() => _phones = Load();
+    public DeviceStore() => _phones = Demo.Enabled ? [] : Load();
 
     public event Action? Changed;
     public event Action<TrustedPhone>? Paired;
@@ -132,8 +132,15 @@ public sealed class DeviceStore : IPairingAuthority
         return [];
     }
 
+    public void AddDemo(TrustedPhone phone)
+    {
+        lock (_lock) _phones.Add(phone);
+        Changed?.Invoke();
+    }
+
     private void SaveLocked()
     {
+        if (Demo.Enabled) return;
         try
         {
             File.WriteAllText(PathName, JsonSerializer.Serialize(_phones, Options));

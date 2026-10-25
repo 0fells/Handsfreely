@@ -16,6 +16,7 @@ public sealed class Settings
 
     private static Settings Load()
     {
+        if (Demo.Enabled) return new Settings { Language = Demo.Language, CloseToTray = false, SmsToasts = false };
         try
         {
             if (File.Exists(PathName))
@@ -30,6 +31,7 @@ public sealed class Settings
 
     public void Save()
     {
+        if (Demo.Enabled) return;
         try
         {
             File.WriteAllText(PathName, JsonSerializer.Serialize(this, Options));

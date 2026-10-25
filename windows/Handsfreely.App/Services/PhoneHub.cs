@@ -144,6 +144,17 @@ public sealed class PhoneHub
         }
     }
 
+    public async Task AddDemoAsync(TrustedPhone phone, PhoneClient client)
+    {
+        var session = new PhoneSession(phone, client);
+        lock (_lock) _sessions[phone.Id] = session;
+        client.Start();
+        session.Info = await client.GetDeviceInfoAsync(session.Token);
+        session.Status = new DeviceStatus(session.Info.Battery, session.Info.Charging, session.Info.Signal, session.Info.Operator);
+        SessionStarted?.Invoke(session);
+        Changed?.Invoke();
+    }
+
     public async Task DisconnectAsync(string phoneId)
     {
         PhoneSession? s;
